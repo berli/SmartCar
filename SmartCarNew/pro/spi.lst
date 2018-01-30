@@ -1,0 +1,54 @@
+C51 COMPILER V8.02   SPI                                                                   01/29/2018 14:30:31 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE SPI
+OBJECT MODULE PLACED IN ..\debug\spi.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE ..\code\spi.c LARGE BROWSE DEBUG OBJECTEXTEND PRINT(.\spi.lst) TABS(2) OBJE
+                    -CT(..\debug\spi.obj)
+
+line level    source
+
+   1          #include "uip.h"
+   2          #include "spi.h"
+   3          
+   4          void WriteByte(u8_t temp)
+   5          {
+   6   1        idata u8_t i;
+   7   1        for(i=0;i<8;i++)
+   8   1        {
+   9   2          SCKN=0;   //delay_us(2);
+  10   2          SIN = temp & 0x80;
+  11   2          SCKN=1;   //delay_us(2);
+  12   2          temp <<=1;
+  13   2        }
+  14   1        SCKN=0;
+  15   1      }
+  16          
+  17          u8_t ReadByte(void)
+  18          {
+  19   1        idata u8_t i,dat1;
+  20   1        SCKN=0;
+  21   1        dat1=0;
+  22   1        for(i=0;i<8;i++)
+  23   1        { 
+  24   2          SCKN=1;     //delay_us(2);
+  25   2          dat1 <<=1;
+  26   2          dat1 |= SON; 
+  27   2          SCKN=0;     //delay_us(2);
+  28   2        }
+  29   1        return dat1;
+  30   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     62    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----       3
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
