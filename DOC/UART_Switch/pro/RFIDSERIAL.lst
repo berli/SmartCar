@@ -1,0 +1,463 @@
+C51 COMPILER V8.02   RFIDSERIAL                                                            01/31/2018 14:51:45 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE RFIDSERIAL
+OBJECT MODULE PLACED IN ..\HEX\RFIDSERIAL.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE ..\code\RFIDSERIAL.c LARGE BROWSE DEBUG OBJECTEXTEND PRINT(.\RFIDSERIAL.lst
+                    -) TABS(2) OBJECT(..\HEX\RFIDSERIAL.obj)
+
+line level    source
+
+   1          #include  "STC15Fxxxx.H"
+   2          #include  "RFIDSERIAL.h"  //串口协议
+   3          #include  "PUBLIC.h"
+   4          
+   5          //1
+   6          #define S1_S0 0x40              //P_SW1.6
+   7          #define S1_S1 0x80              //P_SW1.7
+   8          
+   9          //2
+  10          #define S2RI  0x01              //S2CON.0
+  11          #define S2TI  0x02              //S2CON.1
+  12          #define S2RB8 0x04              //S2CON.2
+  13          #define S2TB8 0x08              //S2CON.3
+  14          #define S2_S0 0x01              //P_SW2.0
+  15          
+  16          //3
+  17          
+  18          
+  19          //4
+  20          #define S4RI  0x01              //S4CON.0
+  21          #define S4TI  0x02              //S4CON.1
+  22          #define S4RB8 0x04              //S4CON.2
+  23          #define S4TB8 0x08              //S4CON.3
+  24          #define S4_S0 0x04              //P_SW2.2
+  25          
+  26          
+  27          
+  28          /*************  本地常量声明  **************/
+  29          #define MAIN_Fosc   11059200L //定义主时钟
+  30          #define RX1_Lenth   32      //串口接收缓冲长度
+  31          #define BaudRate1   115200UL  //选择波特率
+  32          
+  33          #define Timer1_Reload (65536UL -(MAIN_Fosc / 4 / BaudRate1))    //Timer 1 重装值， 对应300KHZ
+  34          #define Timer2_Reload (65536UL -(MAIN_Fosc / 4 / BaudRate1))    //Timer 2 重装值， 对应300KHZ
+  35          
+  36          
+  37          uchar all=0;           
+  38          uchar go=0;            //10位数据
+  39          uchar Checked=0;       //用于标志是否接受完数据
+  40          
+  41          uchar DATA_SEND[10]={ 0x7E, 0x00,     0,  0,      0,0,0,     0x08,      0,       0x7E};
+  42          uchar DATA_GET[10]= { 0x7E, 0x00,     0,  0,      0,0,0,     0x08,      0,       0x7E};
+  43          
+  44          /*********************************************************************
+  45                          *函数的声明以便自己调用
+  46          **********************************************************************/
+  47          
+  48          void UartInit1(void);
+  49          void UartInit2(void);
+  50          void UartInit3(void);
+  51          void UartInit4(void);
+  52          
+  53          void Send_Data();
+  54          void Get_Data_ONE();
+C51 COMPILER V8.02   RFIDSERIAL                                                            01/31/2018 14:51:45 PAGE 2   
+
+  55          void Get_Data_TWO();  //第二串口 接收到 的一楼数据
+  56          void Get_Data_THREE();
+  57          void Get_Data_FOUR();  
+  58          
+  59          //void Must_Modify();
+  60          //void CHECK_SUM();
+  61          void Receive_Data();
+  62          void CHECK_FUN();
+  63          
+  64          
+  65          /*******************************************************************************************
+  66          *     串口发送前 从新赋值给打包数组 及更新数据
+  67          ****************************************************************************************/
+  68          /*
+  69          void Must_Modify()
+  70          {
+  71            DATA_SEND[0]=DATA_PUBLIC[Head];     //数据头
+  72            DATA_SEND[1]=DATA_PUBLIC[RoomID];  //放假号
+  73            DATA_SEND[2]=DATA_PUBLIC[DEviceID];//设备号
+  74            DATA_SEND[3]=DATA_PUBLIC[Operate]; //操作
+  75            DATA_SEND[4]=DATA_PUBLIC[Dateh];   //整数高两位
+  76            DATA_SEND[5]=DATA_PUBLIC[Datel];  //整数地两位
+  77            DATA_SEND[6]=DATA_PUBLIC[Dated];   //小数两位
+  78            DATA_SEND[7]=DATA_PUBLIC[Save];    //保留
+  79            DATA_SEND[9]=DATA_PUBLIC[Teal]; //数据尾
+  80          }
+  81          
+  82          */
+  83          /*******************************************************************************
+  84                    中断发送函数
+  85          ********************************************************************************/
+  86          
+  87          void Send_Data()
+  88          {
+  89   1         uint i=0;
+  90   1         if(FLAG_Recd==2)
+  91   1         {
+  92   2            for(i=0;i<10;i++)          //发送10位数据位  发送至PC端
+  93   2             {
+  94   3                SBUF=DATA_Serial2[i];
+  95   3                while(!TI);
+  96   3                TI=0;
+  97   3             }
+  98   2         }
+  99   1         else if(FLAG_Recd==3)
+ 100   1         {
+ 101   2            for(i=0;i<10;i++)          //发送10位数据位  发送至PC端
+ 102   2             {
+ 103   3                SBUF=DATA_Serial3[i];
+ 104   3                while(!TI);
+ 105   3                TI=0;
+ 106   3             }
+ 107   2         }
+ 108   1         else if(FLAG_Recd==4)
+ 109   1         {
+ 110   2            for(i=0;i<10;i++)          //发送10位数据位  发送至PC端
+ 111   2             {
+ 112   3                SBUF=DATA_Serial4[i];
+ 113   3                while(!TI);
+ 114   3                TI=0;
+ 115   3             }
+ 116   2         }
+C51 COMPILER V8.02   RFIDSERIAL                                                            01/31/2018 14:51:45 PAGE 3   
+
+ 117   1         
+ 118   1         FLAG_Recd=0;
+ 119   1      }
+ 120          
+ 121          
+ 122          /*******************************************************************************
+ 123                    中断接收数据函数
+ 124          ********************************************************************************/
+ 125          
+ 126          void Get_Data_ONE()//接收到的数据  现阶段只有头尾 和操作数  其他的没有校验 
+ 127          {
+ 128   1         Receive_Data();
+ 129   1         CHECK_FUN();
+ 130   1      }
+ 131          
+ 132          
+ 133          //第二串口  接收到的数据
+ 134          
+ 135          void Get_Data_TWO()  
+ 136          {
+ 137   1        if((all==0)&&(S2BUF==0x7E))// 判断第一个是不是0x7e  不确定是不是尾部7e
+ 138   1           {go=1;}
+ 139   1        if((go==1)&&(all==1)&&(S2BUF==0X7E))//第二个7e
+ 140   1           {all=0;}                        //只把all清零，用来保存第二个数字
+ 141   1        if(go==1)  //10个字符可以运行了
+ 142   1        {
+ 143   2          DATA_Serial2[all]=S2BUF;
+ 144   2          all++;
+ 145   2          if(all==10)
+ 146   2          {
+ 147   3            go=0;         //可以接受第一个字符
+ 148   3            all=0;
+ 149   3            FLAG_Recd=2;//标志为  串口2
+ 150   3            TI=1;
+ 151   3            //Checked=1;  //我们需要的 一个数据包接收完毕
+ 152   3          }
+ 153   2        }
+ 154   1      }
+ 155          
+ 156          
+ 157          void Get_Data_THREE()  
+ 158          {
+ 159   1        if((all==0)&&(S3BUF==0x7E))// 判断第一个是不是0x7e  不确定是不是尾部7e
+ 160   1           {go=1;}
+ 161   1        if((go==1)&&(all==1)&&(S3BUF==0X7E))//第二个7e
+ 162   1           {all=0;}                        //只把all清零，用来保存第二个数字
+ 163   1        if(go==1)  //10个字符可以运行了
+ 164   1        {
+ 165   2          DATA_Serial3[all]=S3BUF;
+ 166   2          all++;
+ 167   2          if(all==10)
+ 168   2          {
+ 169   3            go=0;         //可以接受第一个字符
+ 170   3            all=0;
+ 171   3            FLAG_Recd=3;//标志为  串口2
+ 172   3            TI=1;
+ 173   3            //Checked=1;  //我们需要的 一个数据包接收完毕
+ 174   3          }
+ 175   2        }
+ 176   1      }
+ 177          
+ 178          
+C51 COMPILER V8.02   RFIDSERIAL                                                            01/31/2018 14:51:45 PAGE 4   
+
+ 179          void Get_Data_FOUR()  
+ 180          {
+ 181   1        if((all==0)&&(S4BUF==0x7E))// 判断第一个是不是0x7e  不确定是不是尾部7e
+ 182   1           {go=1;}
+ 183   1        if((go==1)&&(all==1)&&(S4BUF==0X7E))//第二个7e
+ 184   1           {all=0;}                        //只把all清零，用来保存第二个数字
+ 185   1        if(go==1)  //10个字符可以运行了
+ 186   1        {
+ 187   2          DATA_Serial4[all]=S4BUF;
+ 188   2          all++;
+ 189   2          if(all==10)
+ 190   2          {
+ 191   3            go=0;         //可以接受第一个字符
+ 192   3            all=0;
+ 193   3            FLAG_Recd=4;//标志为  串口2
+ 194   3            TI=1;
+ 195   3            //Checked=1;  //我们需要的 一个数据包接收完毕
+ 196   3          }
+ 197   2        }
+ 198   1      }
+ 199          /***************************************************************
+ 200                       用于一位一位的接收数据
+ 201          *******************************************************************/
+ 202          
+ 203          void Receive_Data()//接收到的数据  现阶段只有头尾 和操作数  其他的没有校验 
+ 204          {
+ 205   1        if((all==0)&&(SBUF==0x7E))// 判断第一个是不是0x7e  不确定是不是尾部7e
+ 206   1           {go=1;}
+ 207   1        if((go==1)&&(all==1)&&(SBUF==0X7E))//第二个7e
+ 208   1           {all=0;}                        //只把all清零，用来保存第二个数字
+ 209   1        if(go==1)  //10个字符可以运行了
+ 210   1        {
+ 211   2          DATA_GET[all]=SBUF;
+ 212   2          all++;
+ 213   2          if(all==10)
+ 214   2          {
+ 215   3            go=0;         //可以接受第一个字符
+ 216   3            all=0;
+ 217   3            Checked=1;  //我们需要的 一个数据包接收完毕
+ 218   3          }
+ 219   2        }
+ 220   1      }
+ 221          
+ 222          
+ 223          /***************************************************************
+ 224                        用于校验 查看命令
+ 225          *******************************************************************/
+ 226          
+ 227          void CHECK_FUN()
+ 228          {
+ 229   1        if(Checked==1)//数据接收完毕
+ 230   1        {
+ 231   2          Checked=0;
+ 232   2          if((DATA_GET[0]==0X7E)&&(DATA_GET[9]==0X7E))//是否是对的  &&(DATA_GET[1]==0x10)
+ 233   2          {
+ 234   3            switch(DATA_GET[1])   //才看指令
+ 235   3            {
+ 236   4              case 0X10:   S2CON |= S2TI;  break; //发送给一楼 0x10
+ 237   4              case 0X20:   S3CON |= 2;     break; //发送给一2楼 0x20
+ 238   4              case 0X30:   S4CON |= S4TI;  break; //发送给3一楼 0x30
+ 239   4              default:      break;
+ 240   4            }
+C51 COMPILER V8.02   RFIDSERIAL                                                            01/31/2018 14:51:45 PAGE 5   
+
+ 241   3          }
+ 242   2          else
+ 243   2          {
+ 244   3            char k=0;
+ 245   3            for(k=0;k<10;k++)
+ 246   3               { DATA_GET[k]=0;}//指令错误 清空数据
+ 247   3          }
+ 248   2        }
+ 249   1      }
+ 250          
+ 251          
+ 252          /***************************************************************
+ 253                        求校验和   用于发送    发上去的数据全部校验
+ 254          *******************************************************************/
+ 255          /*
+ 256          void CHECK_SUM()
+ 257          {
+ 258            uchar check_sum=0x00;
+ 259            uint j=1;
+ 260            for(j=1;j<8;j++)
+ 261            {
+ 262                if(DATA_SEND[j]>=0x30)
+ 263                {
+ 264                  check_sum+=DATA_SEND[j];           //数字大于等于0x30的减去0x30 再相加
+ 265                  check_sum-=0x30;
+ 266                }
+ 267                else
+ 268                  check_sum+=DATA_SEND[j];  
+ 269            }
+ 270            check_sum=~check_sum+1;           //校验和取反加1
+ 271            DATA_SEND[8]=check_sum;  //校验位
+ 272          }
+ 273          
+ 274          */
+ 275          
+ 276          /*************************************************************  
+ 277               1   *初始化串口中断
+ 278          **********************************************************/
+ 279          
+ 280          void UartInit1(void)             
+ 281          {
+ 282   1          ACC = P_SW1;
+ 283   1          ACC &= ~(1 | S1_S1);    //S1_S0=0 S1_S1=0
+ 284   1          P_SW1 = ACC;                //(P3.0/RxD, P3.1/TxD) 切换为(P3.6/RxD_2, P3.7/TxD_2)
+ 285   1          SCON = 0x50;         
+ 286   1          T2L = (65536 - (MAIN_Fosc/4/BaudRate1));   //设置波特率重装值
+ 287   1          T2H = (65536 - (MAIN_Fosc/4/BaudRate1))>>8;
+ 288   1          AUXR = 0x14;                //T2为1T模式, 并启动定时器2
+ 289   1          AUXR |= 0x01;               //选择定时器2为串口1的波特率发生器
+ 290   1          ES = 1;                     //使能串口1中断
+ 291   1          EA = 1;
+ 292   1      }
+ 293          
+ 294          void UartInit2(void)             
+ 295          {
+ 296   1          P_SW2 &= ~S2_S0;            //S2_S0=0 (P1.0/RxD2, P1.1/TxD2)
+ 297   1          S2CON = 0x50;               //8位可变波特率
+ 298   1          T2L = (65536 - (MAIN_Fosc/4/BaudRate1));   //设置波特率重装值
+ 299   1          T2H = (65536 - (MAIN_Fosc/4/BaudRate1))>>8;
+ 300   1          AUXR = 0x14;                //T2为1T模式, 并启动定时器2
+ 301   1          IE2 |= 0x01;                 //使能串口2中断
+ 302   1          EA = 1;
+C51 COMPILER V8.02   RFIDSERIAL                                                            01/31/2018 14:51:45 PAGE 6   
+
+ 303   1      }
+ 304          //                      7      6      5      4      3      2     1     0        Reset Value
+ 305          //sfr S2CON = 0x9A;   S2SM0    -    S2SM2  S2REN  S2TB8  S2RB8  S2TI  S2RI      00000000B    //S2 Control
+ 306          
+ 307          void UartInit3(void)             
+ 308          {
+ 309   1        S3CON &= ~(1<<7); //8位数据
+ 310   1        S3CON &= 0xBF;    //选择定时器2
+ 311   1        S3_USE_P00P01();    //UART3 使用P0.0 P0.1口 默认
+ 312   1        AUXR = 0x14;                //T2为1T模式, 并启动定时器2
+ 313   1        TH2 = (u8)(Timer2_Reload >> 8);
+ 314   1        TL2 = (u8)Timer2_Reload;
+ 315   1        IE2  |= (1<<3);   //允许中短es3
+ 316   1        S3CON |=  (1<<4); //允许接收
+ 317   1        AUXR |=  (1<<4);  //Timer run enable
+ 318   1        EA = 1;   //允许全局中断
+ 319   1      }
+ 320          
+ 321          void UartInit4(void)             
+ 322          {
+ 323   1          P_SW2 &= ~S4_S0;            //S4_S0=0 (P0.2/RxD4, P0.3/TxD4)
+ 324   1          S4CON = 0x10;               //8位可变波特率
+ 325   1          T2L = (65536 - (MAIN_Fosc/4/BaudRate1));   //设置波特率重装值
+ 326   1          T2H = (65536 - (MAIN_Fosc/4/BaudRate1))>>8;
+ 327   1          AUXR = 0x14;                //T2为1T模式, 并启动定时器2
+ 328   1          IE2 |= 0x10;                 //使能串口4中断
+ 329   1          EA = 1;
+ 330   1      }
+ 331          
+ 332          /*******************************************************************************************
+ 333          *   1   串口中断函数 发送和接收数据包
+ 334          ****************************************************************************************/
+ 335          
+ 336          void Package_Send_AND_Get() interrupt UART1_VECTOR
+ 337          {
+ 338   1      //  FLAG_Send  FLAG_Recd   BUSY
+ 339   1          if (RI)
+ 340   1          {
+ 341   2              while(!RI);
+ 342   2              RI=0;
+ 343   2              Get_Data_ONE();
+ 344   2             
+ 345   2          }
+ 346   1          if (TI)
+ 347   1          {
+ 348   2              while(!TI);
+ 349   2              TI = 0;                 //清除TI位
+ 350   2              Send_Data();
+ 351   2          }
+ 352   1      }
+ 353          
+ 354          
+ 355          /*******************************************************************************************
+ 356          *   2 串口中断函数 发送和接收数据包
+ 357          ****************************************************************************************/
+ 358          
+ 359          void Package_Send_AND_Get2 (void) interrupt UART2_VECTOR
+ 360          {
+ 361   1          char k=0;
+ 362   1          if (S2CON & S2RI)
+ 363   1          {
+ 364   2              S2CON &= ~S2RI;         //清除S2RI位
+C51 COMPILER V8.02   RFIDSERIAL                                                            01/31/2018 14:51:45 PAGE 7   
+
+ 365   2              Get_Data_TWO();
+ 366   2          }
+ 367   1          if (S2CON & S2TI)
+ 368   1          {
+ 369   2              S2CON &= ~S2TI;         //清除S2TI位
+ 370   2              for(k=0;k<10;k++)
+ 371   2              {
+ 372   3                  S2BUF = DATA_GET[k];               
+ 373   3                  while(!(S2CON & S2TI));
+ 374   3                  S2CON &= ~S2TI;         //清除S2TI位
+ 375   3              }
+ 376   2         }
+ 377   1      }
+ 378          
+ 379          
+ 380          /*******************************************************************************************
+ 381          *      3 串口中断函数 发送和接收数据包
+ 382          ****************************************************************************************/
+ 383          
+ 384          void Package_Send_AND_Get3 (void) interrupt UART3_VECTOR
+ 385          {
+ 386   1        char k=0;
+ 387   1        if((S3CON & 1) != 0)
+ 388   1        {
+ 389   2          S3CON &= ~1;                       //清除标志位
+ 390   2          Get_Data_THREE();
+ 391   2          }
+ 392   1        if((S3CON & 2) != 0)
+ 393   1        {
+ 394   2            S3CON &= ~2;                        //清除标志位
+ 395   2            for(k=0;k<10;k++)
+ 396   2            {
+ 397   3                S3BUF=DATA_GET[k];      //dec_to_hex(RX3_Buffer);   //发送  二进制转换为十进制
+ 398   3                while(!((S3CON & 2) != 0));
+ 399   3                S3CON &= ~2;                     //清除标志位
+ 400   3            }
+ 401   2         }
+ 402   1        
+ 403   1      }
+ 404          
+ 405          
+ 406          void Package_Send_AND_Get4 (void) interrupt UART4_VECTOR
+ 407          {
+ 408   1          char k=0;
+ 409   1         if (S4CON & S4RI)
+ 410   1          {
+ 411   2              S4CON &= ~S4RI;         //清除S4RI位
+ 412   2              Get_Data_FOUR(); 
+ 413   2          }
+ 414   1          if (S4CON & S4TI)
+ 415   1          {
+ 416   2              S4CON &= ~S4TI;         //清除S4TI位
+ 417   2              for(k=0;k<10;k++)
+ 418   2              {
+ 419   3                  S4BUF=DATA_GET[k];            
+ 420   3                  while(!(S4CON & S4TI));
+ 421   3                  S4CON &= ~S4TI;         //清除S4TI位
+ 422   3              }
+ 423   2          }
+ 424   1      }
+ 425          
+
+C51 COMPILER V8.02   RFIDSERIAL                                                            01/31/2018 14:51:45 PAGE 8   
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1004    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =     23       1
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

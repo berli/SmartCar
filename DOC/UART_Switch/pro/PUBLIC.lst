@@ -1,0 +1,128 @@
+C51 COMPILER V8.02   PUBLIC                                                                01/31/2018 14:51:45 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE PUBLIC
+OBJECT MODULE PLACED IN ..\HEX\PUBLIC.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE ..\code\PUBLIC.c LARGE BROWSE DEBUG OBJECTEXTEND PRINT(.\PUBLIC.lst) TABS(2
+                    -) OBJECT(..\HEX\PUBLIC.obj)
+
+line level    source
+
+   1          #include "STC15FXXXX.H"
+   2          #include"PUBLIC.H"
+   3          
+   4          /*数据位的位置*/
+   5          
+   6          unsigned char Head=0;
+   7          unsigned char RoomID=1;
+   8          unsigned char DEviceID=2;
+   9          unsigned char Operate=3;
+  10          unsigned char Dateh=4;
+  11          unsigned char Datel=5;
+  12          unsigned char Dated=6 ;
+  13          unsigned char Save =7;
+  14          unsigned char Check=8;
+  15          unsigned char Teal =9;
+  16          
+  17          
+  18          unsigned char FLAG_Recd=0;  //用于查看是哪一个促发了中断
+  19          unsigned char FLAG_Send=0;  //用于查看是哪一个促发了中断
+  20          unsigned char BUSY=0;  //查看当前的哪一个促发啦
+  21          
+  22          unsigned char DATA_PUBLIC[10]={ 0X7E,0X10,0X01,0X00,0X00,0X00,0X00,0X08,0X00,0X7E};
+  23          
+  24          //unsigned char DATA_Serial1[10]={0X7E,0X10,0X01,0X00,0X00,0X00,0X00,0X08,0X00,0X7E};
+  25          unsigned char DATA_Serial2[10]={0X7E,0X10,0X01,0X00,0X00,0X00,0X00,0X08,0X00,0X7E};
+  26          unsigned char DATA_Serial3[10]={0X7E,0X10,0X01,0X00,0X00,0X00,0X00,0X08,0X00,0X7E};
+  27          unsigned char DATA_Serial4[10]={0X7E,0X10,0X01,0X00,0X00,0X00,0X00,0X08,0X00,0X7E};
+  28          
+  29          
+  30          /******************************************
+  31          *     十进制转换为十六进制                
+  32          ******************************************
+  33          
+  34          unsigned char dec_to_hex(uchar b)
+  35          {
+  36            uchar hex_buf=0;
+  37            uchar i=0; 
+  38            uchar arr[2]={0,0};
+  39           if(b>15)
+  40            {   
+  41                i=1;//标志着大于15的两位数
+  42                arr[0]=b%16;
+  43                b=b/16;
+  44                arr[1]=b%16;
+  45            }
+  46           else
+  47           {
+  48             i=0;
+  49             arr[0]=b%16;
+  50           }
+  51           
+  52            if(i==1)       
+  53            {
+  54              switch(arr[1])   
+C51 COMPILER V8.02   PUBLIC                                                                01/31/2018 14:51:45 PAGE 2   
+
+  55              {   
+  56                   case 10: arr[i]=0X0A;  break;   
+  57                   case 11: arr[i]=0X0B;  break;   
+  58                   case 12: arr[i]=0X0C;  break;  
+  59                   case 13: arr[i]=0X0D;  break; 
+  60                   case 14: arr[i]=0X0E;  break;  
+  61                   case 15: arr[i]=0X0F;  break;  
+  62                   default:   break; 
+  63              }  
+  64            }
+  65            if(i==0)
+  66            {
+  67              switch(arr[0])   
+  68              {   
+  69                   case 10: arr[i]=0X0A;  break;   
+  70                   case 11: arr[i]=0X0B;  break;   
+  71                   case 12: arr[i]=0X0C;  break;  
+  72                   case 13: arr[i]=0X0D;  break; 
+  73                   case 14: arr[i]=0X0E;  break;  
+  74                   case 15: arr[i]=0X0F;  break;  
+  75                   default:   break; 
+  76              }  
+  77            }
+  78            
+  79            hex_buf=((arr[1] << 4) | arr[0]);
+  80            return hex_buf;
+  81          }*/
+  82          
+  83          
+  84          
+  85          /******************************************
+  86          *      十六进制转换为十进制                 
+  87          *****************************************
+  88          unsigned char hex_to_dec(uchar a)
+  89          {
+  90              uchar dec_buf=0;
+  91              uchar str[3]={0,0,0};
+  92              uchar j=0;
+  93              while(a)
+  94              {
+  95                  str[j]=a%10;                                        
+  96                  a/=10;    
+  97                  j++;
+  98              }
+  99              dec_buf=str[2]*100+str[1]*10+str[0];
+ 100              return dec_buf;
+ 101          }
+ 102          **/
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   ----    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =     53    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
