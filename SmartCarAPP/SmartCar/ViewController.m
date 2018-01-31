@@ -203,11 +203,18 @@
             [self setDataWithID:0x01 and:0x05];
             break;
         case 9:
-            [self setDataWithID:0x03 and:0x02];//灯光
+            [self setDataWithID:0x03 and:0x02];//灯光开
             break;
         case 10:
-            [self setDataWithID:0x02 and:0x02];//蜂鸣器
+            [self setDataWithID:0x02 and:0x02];//蜂鸣器开
             break;
+        case 11:
+            [self setDataWithID:0x03 and:0x01];//灯关
+            break;
+        case 12:
+            [self setDataWithID:0x02 and:0x01];//蜂鸣器关
+            break;
+            
             
         default:
             
