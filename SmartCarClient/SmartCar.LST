@@ -1,4 +1,4 @@
-C51 COMPILER V8.02   SMARTCAR                                                              02/01/2018 12:22:40 PAGE 1   
+C51 COMPILER V8.02   SMARTCAR                                                              02/01/2018 15:02:12 PAGE 1   
 
 
 C51 COMPILER V8.02, COMPILATION OF MODULE SMARTCAR
@@ -31,306 +31,284 @@ line level    source
   22          sbit LED = P3 ^ 2;  // ¶ÔÓ¦Ó²¼þÁ¬½Ó
   23          sbit LOUND = P5 ^ 4;  // ¶ÔÓ¦Ó²¼þÁ¬½Ó
   24          
-  25          typedef unsigned char BYTE;
-  26          typedef unsigned int WORD;
-  27          
-  28          BYTE DATA_LENGTH =7;
+  25          bit busy;
+  26          
+  27          typedef unsigned char BYTE;
+  28          typedef unsigned int WORD;
   29          
-  30          BYTE DATA_SEND[]={ 0x7E, 0x00,     0,  0,      0,      0,       0x7E};
-  31          BYTE DATA_GET[]= { 0x7E, 0x00,     0,  0,      0,      0,       0x7E};
+  30          BYTE DATA_LENGTH = 7;
+  31          BYTE CURRENT_LENGTH=0;
   32          
-  33          BYTE all=0;           
-  34          
+  33          BYTE DATA_SEND[]= { 0x7E, 0x00,     0,  0,      0,      0,       0x7E};
+  34          BYTE DATA_GET[]=  { 0x7E, 0x00,     0,  0,      0,      0,       0x7E};
   35          
   36          
   37          #define FOSC 11059200L          //ÏµÍ³ÆµÂÊ
   38          #define BAUD 115200             //´®¿Ú²¨ÌØÂÊ
   39          
-  40          #define NONE_PARITY     0       //ÎÞÐ£Ñé
-  41          #define ODD_PARITY      1       //ÆæÐ£Ñé
-  42          #define EVEN_PARITY     2       //Å¼Ð£Ñé
-  43          #define MARK_PARITY     3       //±ê¼ÇÐ£Ñé
-  44          #define SPACE_PARITY    4       //¿Õ°×Ð£Ñé
-  45          
-  46          #define PARITYBIT NONE_PARITY   //¶¨ÒåÐ£ÑéÎ»
-  47          
-  48          
-  49          #define S1_S0 0x40              //P_SW1.6
-  50          #define S1_S1 0x80              //P_SW1.7
-  51          
-  52          
-  53          bit busy;
-  54          
-  55          void SendData(BYTE dat);
-C51 COMPILER V8.02   SMARTCAR                                                              02/01/2018 12:22:40 PAGE 2   
+  40          #define S1_S0 0x40              //P_SW1.6
+  41          #define S1_S1 0x80              //P_SW1.7
+  42          
+  43          
+  44          
+  45          void SendData(char *s);
+  46          void UART_TC (unsigned char *str);
+  47          void UART_T (unsigned char UART_data); //¶¨Òå´®¿Ú·¢ËÍÊý¾Ý±äÁ¿
+  48          void UART_R();//½ÓÊÜÊý¾Ý
+  49          void DELAY_MS(unsigned int timeout);    //@11.0592MHz   1ms
+  50          void ConnectServer();//Á¬½Ó·þÎñÆ÷
+  51          void USART_Init();
+  52          void Device_Init();
+  53          void ResponseData(unsigned char *RES_DATA);
+  54          char CheckData(unsigned char *CHECK_DATA);
+  55          
+C51 COMPILER V8.02   SMARTCAR                                                              02/01/2018 15:02:12 PAGE 2   
 
-  56          void  SendString(char *s);
-  57          
-  58          void UART_TC (unsigned char *str);
-  59          void UART_T (unsigned char UART_data); //¶¨Òå´®¿Ú·¢ËÍÊý¾Ý±äÁ¿
-  60          void Get_Data_ONE();
-  61          void DELAY_MS(unsigned int timeout);    //@11.0592MHz
-  62          void server();
-  63          
-  64          
-  65          void main()
-  66          {
-  67   1          P0M0 = 0x00;
-  68   1          P0M1 = 0x00;
-  69   1          P1M0 = 0x00;
-  70   1          P1M1 = 0x00;
-  71   1          P2M0 = 0x00;
-  72   1          P2M1 = 0x00;
-  73   1          P3M0 = 0x00;
-  74   1          P3M1 = 0x00;
-  75   1          P4M0 = 0x00;
-  76   1          P4M1 = 0x00;
-  77   1          P5M0 = 0x00;
-  78   1          P5M1 = 0x00;
-  79   1          P6M0 = 0x00;
-  80   1          P6M1 = 0x00;
-  81   1          P7M0 = 0x00;
-  82   1          P7M1 = 0x00;
-  83   1      
-  84   1       //   ACC = P_SW1;
-  85   1      //    ACC &= ~(S1_S0 | S1_S1);    //S1_S0=0 S1_S1=0
-  86   1      //    P_SW1 = ACC;                //(P3.0/RxD, P3.1/TxD)
-  87   1          
-  88   1        ACC = P_SW1;  ACC &= ~(S1_S0 | S1_S1);    //S1_S0=1 S1_S1=0
-  89   1        ACC |= S1_S0;               //(P3.6/RxD_2, P3.7/TxD_2)
-  90   1        P_SW1 = ACC;  
-  91   1        
-  92   1      //  ACC = P_SW1;
-  93   1      //  ACC &= ~(S1_S0 | S1_S1);    //S1_S0=0 S1_S1=1
-  94   1      //  ACC |= S1_S1;               //(P1.6/RxD_3, P1.7/TxD_3)
-  95   1      //  P_SW1 = ACC;  
+  56          
+  57          void main()
+  58          {
+  59   1      
+  60   1          Device_Init();
+  61   1      
+  62   1          USART_Init();
+  63   1      
+  64   1          DELAY_MS(1000);
+  65   1      
+  66   1          ConnectServer();
+  67   1      
+  68   1          while(1) {
+  69   2      
+  70   2              //  DELAY_MS(2000);
+  71   2              //  SendString(DATA_GET);
+  72   2      
+  73   2          };
+  74   1      }
+  75          
+  76          
+  77          void Device_Init() {
+  78   1      
+  79   1          LED = 0;
+  80   1          LOUND = 0;
+  81   1      }
+  82          
+  83          
+  84          void USART_Init()
+  85          {
+  86   1      
+  87   1      //   ACC = P_SW1;
+  88   1      //    ACC &= ~(S1_S0 | S1_S1);    //S1_S0=0 S1_S1=0
+  89   1      //    P_SW1 = ACC;                //(P3.0/RxD, P3.1/TxD)
+  90   1      
+  91   1          ACC = P_SW1;
+  92   1          ACC &= ~(S1_S0 | S1_S1);    //S1_S0=1 S1_S1=0
+  93   1          ACC |= S1_S0;               //(P3.6/RxD_2, P3.7/TxD_2)
+  94   1          P_SW1 = ACC;
+  95   1          SCON = 0x50;                //8Î»¿É±ä²¨ÌØÂÊ
   96   1      
-  97   1      #if (PARITYBIT == NONE_PARITY)
-  98   1          SCON = 0x50;                //8Î»¿É±ä²¨ÌØÂÊ
-  99   1      #elif (PARITYBIT == ODD_PARITY) || (PARITYBIT == EVEN_PARITY) || (PARITYBIT == MARK_PARITY)
-                  SCON = 0xda;                //9Î»¿É±ä²¨ÌØÂÊ,Ð£ÑéÎ»³õÊ¼Îª1
-              #elif (PARITYBIT == SPACE_PARITY)
-                  SCON = 0xd2;                //9Î»¿É±ä²¨ÌØÂÊ,Ð£ÑéÎ»³õÊ¼Îª0
-              #endif
- 104   1      
- 105   1          AUXR = 0x40;                //¶¨Ê±Æ÷1Îª1TÄ£Ê½
- 106   1          TMOD = 0x00;                //¶¨Ê±Æ÷1ÎªÄ£Ê½0(16Î»×Ô¶¯ÖØÔØ)
- 107   1          TL1 = (65536 - (FOSC/4/BAUD));   //ÉèÖÃ²¨ÌØÂÊÖØ×°Öµ
- 108   1          TH1 = (65536 - (FOSC/4/BAUD))>>8;
- 109   1          TR1 = 1;                    //¶¨Ê±Æ÷1¿ªÊ¼Æô¶¯
- 110   1          ES = 1;                     //Ê¹ÄÜ´®¿ÚÖÐ¶Ï
- 111   1          EA = 1;
- 112   1            
- 113   1      
- 114   1        //  UART_TC("STC15F2K60S2\r\nUart Test !\r\n\0");
- 115   1        
- 116   1        LED = 0;
- 117   1        LOUND = 0;
-C51 COMPILER V8.02   SMARTCAR                                                              02/01/2018 12:22:40 PAGE 3   
+  97   1      //  ACC = P_SW1;
+  98   1      //  ACC &= ~(S1_S0 | S1_S1);    //S1_S0=0 S1_S1=1
+  99   1      //  ACC |= S1_S1;               //(P1.6/RxD_3, P1.7/TxD_3)
+ 100   1      //  P_SW1 = ACC;
+ 101   1      
+ 102   1      
+ 103   1          AUXR = 0x40;                //¶¨Ê±Æ÷1Îª1TÄ£Ê½
+ 104   1          TMOD = 0x00;                //¶¨Ê±Æ÷1ÎªÄ£Ê½0(16Î»×Ô¶¯ÖØÔØ)
+ 105   1          TL1 = (65536 - (FOSC/4/BAUD));   //ÉèÖÃ²¨ÌØÂÊÖØ×°Öµ
+ 106   1          TH1 = (65536 - (FOSC/4/BAUD))>>8;
+ 107   1          TR1 = 1;                    //¶¨Ê±Æ÷1¿ªÊ¼Æô¶¯
+ 108   1          ES = 1;                     //Ê¹ÄÜ´®¿ÚÖÐ¶Ï
+ 109   1          EA = 1;
+ 110   1      
+ 111   1      }
+ 112          
+ 113          /*----------------------------
+ 114          UART ÖÐ¶Ï·þÎñ³ÌÐò
+ 115          -----------------------------*/
+ 116          void Uart() interrupt 4 using 1
+ 117          {
+C51 COMPILER V8.02   SMARTCAR                                                              02/01/2018 15:02:12 PAGE 3   
 
- 118   1          
- 119   1          DELAY_MS(2000);
- 120   1           server();
- 121   1      all=0;
- 122   1      DELAY_MS(2000);
- 123   1            SendString(DATA_SEND);
- 124   1      
- 125   1          while(1){
- 126   2      
- 127   2      
- 128   2      
- 129   2      DELAY_MS(2000);
- 130   2            SendString(DATA_GET);
- 131   2      };
+ 118   1          if (RI)
+ 119   1          {
+ 120   2              while(!RI);
+ 121   2              RI=0;
+ 122   2              UART_R();
+ 123   2              busy = 0;
+ 124   2      
+ 125   2          }
+ 126   1          if (TI)
+ 127   1          {
+ 128   2              while(!TI);
+ 129   2              TI = 0;                 //Çå³ýTIÎ»
+ 130   2              busy = 0;               //ÇåÃ¦±êÖ¾
+ 131   2          }
  132   1      }
  133          
- 134          /*----------------------------
- 135          UART ÖÐ¶Ï·þÎñ³ÌÐò
- 136          -----------------------------*/
- 137          void Uart() interrupt 4 using 1
- 138          {
- 139   1          if (RI)
- 140   1          {
- 141   2              while(!RI);
- 142   2              RI=0;
- 143   2              Get_Data_ONE();
- 144   2                busy = 0; 
- 145   2             
- 146   2          }
- 147   1             if (TI)
- 148   1          {
- 149   2              while(!TI);
- 150   2              TI = 0;                 //Çå³ýTIÎ»
- 151   2              busy = 0;               //ÇåÃ¦±êÖ¾
- 152   2          }
- 153   1      }
- 154          
- 155          /*----------------------------
- 156          ·¢ËÍ´®¿ÚÊý¾Ý
- 157          ----------------------------*/
- 158          void SendData(BYTE dat)
- 159          {
- 160   1          while (busy);               //µÈ´ýÇ°ÃæµÄÊý¾Ý·¢ËÍÍê³É
- 161   1          ACC = dat;                  //»ñÈ¡Ð£ÑéÎ»P (PSW.0)
- 162   1          if (P)                      //¸ù¾ÝPÀ´ÉèÖÃÐ£ÑéÎ»
- 163   1          {
- 164   2      #if (PARITYBIT == ODD_PARITY)
-                      TB8 = 0;                //ÉèÖÃÐ£ÑéÎ»Îª0
-              #elif (PARITYBIT == EVEN_PARITY)
-                      TB8 = 1;                //ÉèÖÃÐ£ÑéÎ»Îª1
-              #endif
- 169   2          }
- 170   1          else
- 171   1          {
- 172   2      #if (PARITYBIT == ODD_PARITY)
-                      TB8 = 1;                //ÉèÖÃÐ£ÑéÎ»Îª1
-              #elif (PARITYBIT == EVEN_PARITY)
-                      TB8 = 0;                //ÉèÖÃÐ£ÑéÎ»Îª0
-              #endif
- 177   2          }
- 178   1          busy = 1;
- 179   1          SBUF = ACC;                 //Ð´Êý¾Ýµ½UARTÊý¾Ý¼Ä´æÆ÷
-C51 COMPILER V8.02   SMARTCAR                                                              02/01/2018 12:22:40 PAGE 4   
+ 134          
+ 135          /*----------------------------
+ 136          ·¢ËÍ´®¿ÚÊý¾Ý
+ 137          ----------------------------*/
+ 138          
+ 139          void  SendData(char *s)
+ 140          {
+ 141   1      
+ 142   1          unsigned int i=0;
+ 143   1          while (busy);               //µÈ´ýÇ°ÃæµÄÊý¾Ý·¢ËÍÍê³É
+ 144   1      
+ 145   1          for(i=0; i<DATA_LENGTH; i++)
+ 146   1          {
+ 147   2              SBUF=s[i];
+ 148   2              while(!TI);
+ 149   2              TI=0;
+ 150   2          }
+ 151   1      }
+ 152          
+ 153          void UART_T (unsigned char UART_data) { //¶¨Òå´®¿Ú·¢ËÍÊý¾Ý±äÁ¿
+ 154   1          SBUF = UART_data; //½«½ÓÊÕµÄÊý¾Ý·¢ËÍ»ØÈ¥
+ 155   1          while(TI == 0);   //¼ì²é·¢ËÍÖÐ¶Ï±êÖ¾Î»
+ 156   1          TI = 0;     //Áî·¢ËÍÖÐ¶Ï±êÖ¾Î»Îª0£¨Èí¼þÇåÁã£©
+ 157   1      }
+ 158          
+ 159          
+ 160          void UART_TC (unsigned char *str) {
+ 161   1          while(*str != '\0') {
+ 162   2              UART_T(*str);
+ 163   2              str++;
+ 164   2          }
+ 165   1          *str = 0;
+ 166   1      }
+ 167          
+ 168          
+ 169          //´®¿Ú  ½ÓÊÕµ½µÄÊý¾Ý
+ 170          
+ 171          void UART_R()
+ 172          {
+ 173   1          DATA_GET[CURRENT_LENGTH]=SBUF;
+ 174   1          CURRENT_LENGTH++;
+ 175   1          if(CURRENT_LENGTH==DATA_LENGTH)
+ 176   1          {
+ 177   2              CURRENT_LENGTH=0;
+ 178   2              ResponseData(DATA_GET);
+ 179   2          }
+C51 COMPILER V8.02   SMARTCAR                                                              02/01/2018 15:02:12 PAGE 4   
 
  180   1      }
  181          
  182          
- 183          /*----------------------------
- 184          ·¢ËÍ×Ö·û´®
- 185          ----------------------------*/
- 186          
- 187          void  SendString(char *s)
- 188          {
- 189   1         unsigned int i=0;
- 190   1           
- 191   1             for(i=0;i<DATA_LENGTH;i++)          //·¢testÊý¾Ý ·¢ËÍÖÁPC¶Ë
- 192   1             {
- 193   2                SBUF=s[i];
- 194   2                while(!TI);
- 195   2                TI=0;
- 196   2             }
- 197   1      }
+ 183          
+ 184          char CheckData(unsigned char *CHECK_DATA) {
+ 185   1      
+ 186   1        unsigned char  CHECKSUM = CHECK_DATA[1]+CHECK_DATA[2]+CHECK_DATA[3]+CHECK_DATA[4]-0x01;
+ 187   1              
+ 188   1        unsigned char SUM= CHECK_DATA[5];
+ 189   1        
+ 190   1        if(CHECKSUM == SUM){
+ 191   2            return 1;
+ 192   2        }
+ 193   1        return 0;
+ 194   1      
+ 195   1      }
+ 196          
+ 197          
  198          
- 199          void UART_T (unsigned char UART_data){ //¶¨Òå´®¿Ú·¢ËÍÊý¾Ý±äÁ¿
- 200   1        SBUF = UART_data; //½«½ÓÊÕµÄÊý¾Ý·¢ËÍ»ØÈ¥
- 201   1        while(TI == 0);   //¼ì²é·¢ËÍÖÐ¶Ï±êÖ¾Î»
- 202   1        TI = 0;     //Áî·¢ËÍÖÐ¶Ï±êÖ¾Î»Îª0£¨Èí¼þÇåÁã£©
- 203   1      }
- 204          
- 205          void UART_TC (unsigned char *str){
- 206   1        while(*str != '\0'){
- 207   2          UART_T(*str);
- 208   2          *str++;
-*** WARNING C275 IN LINE 208 OF SMARTCAR.C: expression with possibly no effect
- 209   2        }
- 210   1        *str = 0;
- 211   1      }
- 212          
- 213          
- 214          //´®¿Ú  ½ÓÊÕµ½µÄÊý¾Ý
- 215          
- 216          void Get_Data_ONE()  
- 217          {
- 218   1      
- 219   1          DATA_GET[all]=SBUF;
- 220   1          all++;
- 221   1          if(all==DATA_LENGTH)
- 222   1          {
- 223   2            all=0;
- 224   2            if(DATA_GET[1]==0x03 && DATA_GET[4]==0x02){
- 225   3              LED = 1;
- 226   3            }else if(DATA_GET[1]==0x03 && DATA_GET[4]==0x01){
- 227   3              LED = 0;
- 228   3            }else if(DATA_GET[1]==0x02 && DATA_GET[4]==0x02){
- 229   3              LOUND = 1;
- 230   3            }else if(DATA_GET[1]==0x02 && DATA_GET[4]==0x01){
- 231   3              LOUND = 0;
- 232   3            }
- 233   2              
- 234   2            SendString(DATA_GET);
- 235   2      
- 236   2          
- 237   2            }
- 238   1      }
- 239          
- 240          void DELAY_1MS(){
-C51 COMPILER V8.02   SMARTCAR                                                              02/01/2018 12:22:40 PAGE 5   
+ 199          void ResponseData(unsigned char *RES_DATA) {
+ 200   1        
+ 201   1        if(CheckData(RES_DATA)){
+ 202   2          
+ 203   2          if(RES_DATA[1]==0x03 && RES_DATA[4]==0x02) {
+ 204   3              LED = 1;
+ 205   3          } else  if(RES_DATA[1]==0x03 && RES_DATA[4]==0x01) {
+ 206   3              LED = 0;
+ 207   3          } else if(RES_DATA[1]==0x02 && RES_DATA[4]==0x02) {
+ 208   3              LOUND = 1;
+ 209   3          } else  if(RES_DATA[1]==0x02 && RES_DATA[4]==0x01) {
+ 210   3              LOUND = 0;
+ 211   3          }
+ 212   2      
+ 213   2          SendData(DATA_GET);
+ 214   2      
+ 215   2        }
+ 216   1      
+ 217   1      }
+ 218          
+ 219          
+ 220          
+ 221          void DELAY_1MS() {
+ 222   1          unsigned char i, j;
+ 223   1      
+ 224   1          _nop_();
+ 225   1          _nop_();
+ 226   1          _nop_();
+ 227   1          i = 11;
+ 228   1          j = 190;
+ 229   1          do
+ 230   1          {
+ 231   2              while (--j);
+ 232   2          } while (--i);
+ 233   1      
+ 234   1      
+ 235   1      }
+ 236          
+ 237          void DELAY_MS(unsigned int timeout)   //@11.0592MHz
+ 238          {
+ 239   1          int t = 0;
+ 240   1          while (t < timeout)
+ 241   1          {
+C51 COMPILER V8.02   SMARTCAR                                                              02/01/2018 15:02:12 PAGE 5   
 
- 241   1      unsigned char i, j;
- 242   1      
- 243   1        _nop_();
- 244   1        _nop_();
- 245   1        _nop_();
- 246   1        i = 11;
- 247   1        j = 190;
- 248   1        do
- 249   1        {
- 250   2          while (--j);
- 251   2        } while (--i);
- 252   1        
+ 242   2              t++;
+ 243   2              DELAY_1MS();
+ 244   2          }
+ 245   1      }
+ 246          
+ 247          
+ 248          void ConnectServer() {
+ 249   1      
+ 250   1      
+ 251   1          UART_TC("+++\0"); // ÍË³öÍ¸´«Ä£Ê½
+ 252   1          DELAY_MS( 1500);
  253   1      
- 254   1      }
- 255          
- 256          void DELAY_MS(unsigned int timeout)   //@11.0592MHz
- 257          {
- 258   1          int t = 0;
- 259   1        while (t < timeout)
- 260   1        {
- 261   2          t++;
- 262   2        
- 263   2        DELAY_1MS();
- 264   2        
- 265   2      }
- 266   1      }
- 267          
- 268          void server(){
- 269   1      
- 270   1      
- 271   1        UART_TC("+++\0"); // ÍË³öÍ¸´«Ä£Ê½
- 272   1        DELAY_MS( 1500);
- 273   1      
- 274   1        UART_TC("AT\r\n\0");  // ATÖ¸Áî²âÊÔ
- 275   1        DELAY_MS(1500);
- 276   1      
- 277   1        //UART_TC("AT+CWSTARTSMART\r\n\0"); // ¿ªÊ¼ÖÇÄÜÅäÍøÄ£Ê½
- 278   1        //DELAY_MS(1000);
- 279   1      //  LED = 0; // ÅäÍøÖ¸Ê¾µÆÁÁÆð
- 280   1      //  DELAY_MS( 30000); // Á´½Ó³É¹¦
- 281   1      
- 282   1        //UART_TC("AT+CWSTOPSMART\r\n\0"); // ½áÊøÖÇÄÜÅäÍøÄ£Ê½£¬ÊÍ·ÅÄ£¿é×ÊÔ´(±ØÐë)
- 283   1       // DELAY_MS( 1000);
- 284   1        //LED = 1; // ÅäÍøÖ¸Ê¾µÆÏ¨Ãð
- 285   1      
- 286   1        UART_TC("AT+CIPMUX=0\r\n\0");  // ÉèÖÃµ¥Á¬½ÓÄ£Ê½
- 287   1        DELAY_MS(1500);
- 288   1      
- 289   1        UART_TC("AT+CIPSTART=\"TCP\",\"192.168.0.104\",4001\r\n\0");  // Á¬½Óµ½Ö¸¶¨TCP·þÎñÆ÷
- 290   1        DELAY_MS( 3500);
- 291   1      
- 292   1        UART_TC("AT+CIPMODE=1\r\n\0"); // ÉèÖÃÍ¸´«Ä£Ê½
- 293   1        DELAY_MS( 1500);
- 294   1      
- 295   1        UART_TC("AT+SAVETRANSLINK=1,\"192.168.0.104\",4001,\"TCP\"\r\n\0"); // ±£´æTCPÁ¬½Óµ½flash£¬ÊµÏÖÉÏµçÍ¸´«
- 296   1        DELAY_MS(1500);
- 297   1      
- 298   1        UART_TC("AT+CIPSEND\r\n\0");   // ½øÈëÍ¸´«Ä£Ê½
- 299   1        DELAY_MS( 1500);
- 300   1      
- 301   1      
- 302   1      }
-C51 COMPILER V8.02   SMARTCAR                                                              02/01/2018 12:22:40 PAGE 6   
-
+ 254   1          UART_TC("AT\r\n\0");  // ATÖ¸Áî²âÊÔ
+ 255   1          DELAY_MS(1500);
+ 256   1      
+ 257   1          //UART_TC("AT+CWSTARTSMART\r\n\0"); // ¿ªÊ¼ÖÇÄÜÅäÍøÄ£Ê½
+ 258   1          //DELAY_MS(1000);
+ 259   1      //  LED = 0; // ÅäÍøÖ¸Ê¾µÆÁÁÆð
+ 260   1      //  DELAY_MS( 30000); // Á´½Ó³É¹¦
+ 261   1      
+ 262   1          //UART_TC("AT+CWSTOPSMART\r\n\0"); // ½áÊøÖÇÄÜÅäÍøÄ£Ê½£¬ÊÍ·ÅÄ£¿é×ÊÔ´(±ØÐë)
+ 263   1      //  DELAY_MS( 1000);
+ 264   1          //LED = 1; // ÅäÍøÖ¸Ê¾µÆÏ¨Ãð
+ 265   1      
+ 266   1          UART_TC("AT+CIPMUX=0\r\n\0");  // ÉèÖÃµ¥Á¬½ÓÄ£Ê½
+ 267   1          DELAY_MS(1500);
+ 268   1      
+ 269   1          UART_TC("AT+CIPSTART=\"TCP\",\"192.168.0.104\",4001\r\n\0");  // Á¬½Óµ½Ö¸¶¨TCP·þÎñÆ÷
+ 270   1          DELAY_MS( 3500);
+ 271   1      
+ 272   1          UART_TC("AT+CIPMODE=1\r\n\0"); // ÉèÖÃÍ¸´«Ä£Ê½
+ 273   1          DELAY_MS( 1500);
+ 274   1      
+ 275   1          UART_TC("AT+SAVETRANSLINK=1,\"192.168.0.104\",4001,\"TCP\"\r\n\0"); // ±£´æTCPÁ¬½Óµ½flash£¬ÊµÏÖÉÏµçÍ¸´
+             -«
+ 276   1          DELAY_MS(1500);
+ 277   1      
+ 278   1          UART_TC("AT+CIPSEND\r\n\0");   // ½øÈëÍ¸´«Ä£Ê½
+ 279   1          DELAY_MS( 1500);
+ 280   1      
+ 281   1          CURRENT_LENGTH=0;
+ 282   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    439    ----
+   CODE SIZE        =    481    ----
    CONSTANT SIZE    =    147    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----
-   DATA SIZE        =     16       3
+   DATA SIZE        =     16       6
    IDATA SIZE       =   ----    ----
    BIT SIZE         =      1    ----
 END OF MODULE INFORMATION.
 
 
-C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
