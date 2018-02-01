@@ -3,16 +3,31 @@
 <pre>
 <h1>µVision Build Log</h1>
 <h2>Project:</h2>
-\\Mac\Home\Documents\Project\STC\SmartCar\DOC\port\port.uvproj
+C:\Users\TIANYUAN\Downloads\SmartCar-develop\SmartCar-develop\DOC\port\port.uvproj
 Project File Date:  01/31/2018
 
 <h2>Output:</h2>
 Rebuild target 'port'
 compiling port.c...
+PORT.C(208): warning C275: expression with possibly no effect
 linking...
-Program Size: data=12.1 xdata=0 code=219
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SENDDATA?PORT
+*** WARNING L15: MULTIPLE CALL TO SEGMENT
+    SEGMENT: ?PR?_SENDSTRING?PORT
+    CALLER1: ?PR?UART?PORT
+    CALLER2: ?C_C51STARTUP
+Program Size: data=39.1 xdata=0 code=845
 creating hex file from "port"...
-"port" - 0 Error(s), 0 Warning(s).
-</pre>
-</body>
-</html>
+"port" - 0 Error(s), 3 Warning(s).
+.C(57): error C231: 'P4M0': redefinition
+PORT.C(58): error C231: 'P5M1': redefinition
+PORT.C(59): error C231: 'P5M0': redefinition
+PORT.C(60): error C231: 'P6M1': redefinition
+PORT.C(61): error C231: 'P6M0': redefinition
+PORT.C(62): error C231: 'P7M1': redefinition
+PORT.C(63): error C231: 'P7M0': redefinition
+PORT.C(65): error C231: 'AUXR': redefinition
+PORT.C(67): error C231: 'P_SW1': redefinition
+PORT.C(72): error C231: 'P22': redefinition
+Target not created
