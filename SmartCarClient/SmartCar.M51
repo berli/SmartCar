@@ -1,4 +1,4 @@
-BL51 BANKED LINKER/LOCATER V6.00                                                        02/01/2018  15:02:12  PAGE 1
+BL51 BANKED LINKER/LOCATER V6.00                                                        02/01/2018  15:38:44  PAGE 1
 
 
 BL51 BANKED LINKER/LOCATER V6.00, INVOKED BY:
@@ -11,6 +11,7 @@ MEMORY MODEL: SMALL
 INPUT MODULES INCLUDED:
   SmartCar.obj (SMARTCAR)
   C:\KEIL\C51\LIB\C51S.LIB (?C_STARTUP)
+  C:\KEIL\C51\LIB\C51S.LIB (?C?COPY)
   C:\KEIL\C51\LIB\C51S.LIB (?C?CLDPTR)
   C:\KEIL\C51\LIB\C51S.LIB (?C?CLDOPTR)
   C:\KEIL\C51\LIB\C51S.LIB (?C?CSTPTR)
@@ -26,40 +27,41 @@ LINK MAP OF MODULE:  SmartCar (SMARTCAR)
             * * * * * * *   D A T A   M E M O R Y   * * * * * * *
             REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
             REG     0008H     0008H     ABSOLUTE     "REG BANK 1"
-            DATA    0010H     0010H     UNIT         ?DT?SMARTCAR
+            DATA    0010H     0010H     UNIT         _DATA_GROUP_
             BIT     0020H.0   0000H.1   UNIT         ?BI?SMARTCAR
                     0020H.1   0000H.7                *** GAP ***
-            DATA    0021H     0006H     UNIT         _DATA_GROUP_
-            IDATA   0027H     0001H     UNIT         ?STACK
+            DATA    0021H     0009H     UNIT         ?DT?SMARTCAR
+            IDATA   002AH     0001H     UNIT         ?STACK
 
             * * * * * * *   C O D E   M E M O R Y   * * * * * * *
             CODE    0000H     0003H     ABSOLUTE     
             CODE    0003H     001EH     UNIT         ?PR?USART_INIT?SMARTCAR
                     0021H     0002H                  *** GAP ***
             CODE    0023H     0003H     ABSOLUTE     
-            CODE    0026H     0093H     UNIT         ?CO?SMARTCAR
-            CODE    00B9H     008CH     UNIT         ?C_C51STARTUP
-            CODE    0145H     006EH     UNIT         ?PR?_RESPONSEDATA?SMARTCAR
-            CODE    01B3H     0058H     UNIT         ?C?LIB_CODE
-            CODE    020BH     0046H     UNIT         ?PR?CONNECTSERVER?SMARTCAR
-            CODE    0251H     0034H     UNIT         ?PR?_SENDDATA?SMARTCAR
-            CODE    0285H     002FH     UNIT         ?PR?UART?SMARTCAR
-            CODE    02B4H     002FH     UNIT         ?PR?_CHECKDATA?SMARTCAR
-            CODE    02E3H     0022H     UNIT         ?PR?_DELAY_MS?SMARTCAR
-            CODE    0305H     001AH     UNIT         ?PR?UART_R?SMARTCAR
-            CODE    031FH     0019H     UNIT         ?C_INITSEG
-            CODE    0338H     0016H     UNIT         ?PR?_UART_TC?SMARTCAR
-            CODE    034EH     0012H     UNIT         ?PR?MAIN?SMARTCAR
-            CODE    0360H     000CH     UNIT         ?PR?DELAY_1MS?SMARTCAR
-            CODE    036CH     0008H     UNIT         ?PR?_UART_T?SMARTCAR
-            CODE    0374H     0005H     UNIT         ?PR?DEVICE_INIT?SMARTCAR
+            CODE    0026H     014EH     UNIT         ?C?LIB_CODE
+            CODE    0174H     009AH     UNIT         ?CO?SMARTCAR
+            CODE    020EH     008DH     UNIT         ?PR?_RESPONSEDATA?SMARTCAR
+            CODE    029BH     008CH     UNIT         ?C_C51STARTUP
+            CODE    0327H     0046H     UNIT         ?PR?CONNECTSERVER?SMARTCAR
+            CODE    036DH     003DH     UNIT         ?PR?_SENDACKDATA?SMARTCAR
+            CODE    03AAH     0034H     UNIT         ?PR?_SENDDATA?SMARTCAR
+            CODE    03DEH     002FH     UNIT         ?PR?UART?SMARTCAR
+            CODE    040DH     0022H     UNIT         ?PR?_DELAY_MS?SMARTCAR
+            CODE    042FH     0021H     UNIT         ?PR?_CHECKDATA?SMARTCAR
+            CODE    0450H     001AH     UNIT         ?PR?UART_R?SMARTCAR
+            CODE    046AH     0016H     UNIT         ?PR?_UART_TC?SMARTCAR
+            CODE    0480H     0012H     UNIT         ?PR?MAIN?SMARTCAR
+            CODE    0492H     0010H     UNIT         ?C_INITSEG
+            CODE    04A2H     000CH     UNIT         ?PR?DELAY_1MS?SMARTCAR
+            CODE    04AEH     0008H     UNIT         ?PR?_UART_T?SMARTCAR
+            CODE    04B6H     0005H     UNIT         ?PR?DEVICE_INIT?SMARTCAR
 
 
 
 OVERLAY MAP OF MODULE:   SmartCar (SMARTCAR)
+BL51 BANKED LINKER/LOCATER V6.00                                                      02/01/2018  15:38:44  PAGE 2
 
 
-BL51 BANKED LINKER/LOCATER V6.00                                                      02/01/2018  15:02:12  PAGE 2
 
 
 SEGMENT                              DATA_GROUP 
@@ -71,11 +73,17 @@ SEGMENT                              DATA_GROUP
 ?PR?UART_R?SMARTCAR                -----    -----
   +--> ?PR?_RESPONSEDATA?SMARTCAR
 
-?PR?_RESPONSEDATA?SMARTCAR         0021H    0003H
+?PR?_RESPONSEDATA?SMARTCAR         0010H    0003H
+  +--> ?PR?_CHECKDATA?SMARTCAR
+  +--> ?PR?_SENDACKDATA?SMARTCAR
+  +--> ?PR?_SENDDATA?SMARTCAR
+
+?PR?_SENDACKDATA?SMARTCAR          0013H    000AH
+  +--> ?CO?SMARTCAR
   +--> ?PR?_CHECKDATA?SMARTCAR
   +--> ?PR?_SENDDATA?SMARTCAR
 
-?PR?_SENDDATA?SMARTCAR             0024H    0003H
+?PR?_SENDDATA?SMARTCAR             001DH    0003H
 
 *** NEW ROOT ***************************************************
 
@@ -111,6 +119,9 @@ SYMBOL TABLE OF MODULE:  SmartCar (SMARTCAR)
   -------         MODULE        SMARTCAR
   C:0000H         SYMBOL        _ICE_DUMMY_
   D:0080H         PUBLIC        P0
+BL51 BANKED LINKER/LOCATER V6.00                                                      02/01/2018  15:38:44  PAGE 3
+
+
   D:0090H         PUBLIC        P1
   D:00A0H         PUBLIC        P2
   D:00B0H         PUBLIC        P3
@@ -119,69 +130,67 @@ SYMBOL TABLE OF MODULE:  SmartCar (SMARTCAR)
   D:00C8H         PUBLIC        P5
   B:00A8H.7       PUBLIC        EA
   D:00E8H         PUBLIC        P6
-BL51 BANKED LINKER/LOCATER V6.00                                                      02/01/2018  15:02:12  PAGE 3
-
-
   D:00F8H         PUBLIC        P7
   C:0003H         PUBLIC        USART_Init
   D:00A2H         PUBLIC        P_SW1
   D:00A8H         PUBLIC        IE
-  C:0338H         PUBLIC        _UART_TC
+  C:046AH         PUBLIC        _UART_TC
   B:00A8H.4       PUBLIC        ES
   D:00B8H         PUBLIC        IP
+  C:036DH         PUBLIC        _sendAckData
   B:0098H.0       PUBLIC        RI
   B:0098H.1       PUBLIC        TI
-  C:0285H         PUBLIC        Uart
-  C:0360H         PUBLIC        DELAY_1MS
+  C:03DEH         PUBLIC        Uart
+  C:04A2H         PUBLIC        DELAY_1MS
   D:00D8H         PUBLIC        CCON
-  C:034EH         PUBLIC        main
-  D:0010H         PUBLIC        DATA_SEND
-  C:0145H         PUBLIC        _ResponseData
+  C:0480H         PUBLIC        main
+  C:020EH         PUBLIC        _ResponseData
   D:0099H         PUBLIC        SBUF
   D:0098H         PUBLIC        SCON
   D:0089H         PUBLIC        TMOD
   D:0088H         PUBLIC        TCON
-  C:02B4H         PUBLIC        _CheckData
-  D:0017H         PUBLIC        DATA_LENGTH
+  C:042FH         PUBLIC        _CheckData
+  D:0021H         PUBLIC        DATA_LENGTH
   D:008EH         PUBLIC        AUXR
+  C:0207H         SYMBOL        _?ix1000
   B:0020H.0       PUBLIC        busy
   D:00E0H         PUBLIC        ACC
-  C:0374H         PUBLIC        Device_Init
-  C:020BH         PUBLIC        ConnectServer
-  D:0018H         PUBLIC        CURRENT_LENGTH
+  C:04B6H         PUBLIC        Device_Init
+  C:0327H         PUBLIC        ConnectServer
+  D:0022H         PUBLIC        CURRENT_LENGTH
   D:008DH         PUBLIC        TH1
-  C:02ECH         PUBLIC        _DELAY_MS
-  C:036CH         PUBLIC        _UART_T
+  C:0416H         PUBLIC        _DELAY_MS
+  C:04AEH         PUBLIC        _UART_T
   D:008BH         PUBLIC        TL1
   B:00B0H.2       PUBLIC        LED
   B:0088H.6       PUBLIC        TR1
-  D:0019H         PUBLIC        DATA_GET
-  C:0251H         PUBLIC        _SendData
-  C:0305H         PUBLIC        UART_R
+  D:0023H         PUBLIC        DATA_GET
+  C:03AAH         PUBLIC        _SendData
+  C:0450H         PUBLIC        UART_R
   D:00D0H         PUBLIC        PSW
   -------         PROC          MAIN
-  C:034EH         LINE#         57
-  C:034EH         LINE#         58
-  C:034EH         LINE#         60
-  C:0351H         LINE#         62
-  C:0354H         LINE#         64
-  C:035BH         LINE#         66
-  C:035EH         LINE#         68
-  C:035EH         LINE#         73
+  C:0480H         LINE#         57
+  C:0480H         LINE#         58
+  C:0480H         LINE#         60
+  C:0483H         LINE#         62
+  C:0486H         LINE#         64
+  C:048DH         LINE#         66
+  C:0490H         LINE#         68
+  C:0490H         LINE#         73
   -------         ENDPROC       MAIN
   -------         PROC          DEVICE_INIT
-  C:0374H         LINE#         77
-  C:0374H         LINE#         79
-  C:0376H         LINE#         80
-  C:0378H         LINE#         81
+BL51 BANKED LINKER/LOCATER V6.00                                                      02/01/2018  15:38:44  PAGE 4
+
+
+  C:04B6H         LINE#         77
+  C:04B6H         LINE#         79
+  C:04B8H         LINE#         80
+  C:04BAH         LINE#         81
   -------         ENDPROC       DEVICE_INIT
   -------         PROC          USART_INIT
   C:0003H         LINE#         84
   C:0003H         LINE#         85
   C:0003H         LINE#         91
-BL51 BANKED LINKER/LOCATER V6.00                                                      02/01/2018  15:02:12  PAGE 4
-
-
   C:0005H         LINE#         92
   C:0007H         LINE#         93
   C:0009H         LINE#         94
@@ -196,176 +205,191 @@ SYMBOL TABLE OF MODULE:  SmartCar (SMARTCAR)
   C:0020H         LINE#         111
   -------         ENDPROC       USART_INIT
   -------         PROC          UART
-  C:0285H         LINE#         116
-  C:0292H         LINE#         118
-  C:0295H         LINE#         119
-  C:0295H         LINE#         120
-  C:0298H         LINE#         121
-  C:029AH         LINE#         122
-  C:029DH         LINE#         123
-  C:029FH         LINE#         125
-  C:029FH         LINE#         126
-  C:02A2H         LINE#         127
-  C:02A2H         LINE#         128
-  C:02A5H         LINE#         129
-  C:02A7H         LINE#         130
-  C:02A9H         LINE#         131
-  C:02A9H         LINE#         132
+  C:03DEH         LINE#         116
+  C:03EBH         LINE#         118
+  C:03EEH         LINE#         119
+  C:03EEH         LINE#         120
+  C:03F1H         LINE#         121
+  C:03F3H         LINE#         122
+  C:03F6H         LINE#         123
+  C:03F8H         LINE#         125
+  C:03F8H         LINE#         126
+  C:03FBH         LINE#         127
+  C:03FBH         LINE#         128
+  C:03FEH         LINE#         129
+  C:0400H         LINE#         130
+  C:0402H         LINE#         131
+  C:0402H         LINE#         132
   -------         ENDPROC       UART
   -------         PROC          _SENDDATA
-  D:0024H         SYMBOL        s
+  D:001DH         SYMBOL        s
   -------         DO            
   D:0006H         SYMBOL        i
   -------         ENDDO         
-  C:0251H         LINE#         139
-  C:0257H         LINE#         140
-  C:0257H         LINE#         142
-  C:025AH         LINE#         143
-  C:025DH         LINE#         145
-  C:0269H         LINE#         146
-  C:0269H         LINE#         147
-  C:0278H         LINE#         148
-  C:027BH         LINE#         149
-  C:027DH         LINE#         150
-  C:0284H         LINE#         151
+  C:03AAH         LINE#         139
+  C:03B0H         LINE#         140
+  C:03B0H         LINE#         142
+  C:03B3H         LINE#         143
+  C:03B6H         LINE#         145
+  C:03C2H         LINE#         146
+  C:03C2H         LINE#         147
+  C:03D1H         LINE#         148
+  C:03D4H         LINE#         149
+  C:03D6H         LINE#         150
+  C:03DDH         LINE#         151
   -------         ENDPROC       _SENDDATA
   -------         PROC          _UART_T
+BL51 BANKED LINKER/LOCATER V6.00                                                      02/01/2018  15:38:44  PAGE 5
+
+
   D:0007H         SYMBOL        UART_data
-  C:036CH         LINE#         153
-  C:036CH         LINE#         154
-  C:036EH         LINE#         155
-  C:0371H         LINE#         156
-  C:0373H         LINE#         157
+  C:04AEH         LINE#         153
+  C:04AEH         LINE#         154
+  C:04B0H         LINE#         155
+  C:04B3H         LINE#         156
+  C:04B5H         LINE#         157
   -------         ENDPROC       _UART_T
   -------         PROC          _UART_TC
   D:0001H         SYMBOL        str
-BL51 BANKED LINKER/LOCATER V6.00                                                      02/01/2018  15:02:12  PAGE 5
-
-
-  C:0338H         LINE#         160
-  C:0338H         LINE#         161
-  C:033EH         LINE#         162
-  C:0341H         LINE#         163
-  C:0348H         LINE#         164
-  C:034AH         LINE#         165
+  C:046AH         LINE#         160
+  C:046AH         LINE#         161
+  C:0470H         LINE#         162
+  C:0473H         LINE#         163
+  C:047AH         LINE#         164
+  C:047CH         LINE#         165
   -------         ENDPROC       _UART_TC
   -------         PROC          UART_R
-  C:0305H         LINE#         171
-  C:0305H         LINE#         172
-  C:0305H         LINE#         173
-  C:030CH         LINE#         174
-  C:030EH         LINE#         175
-  C:0313H         LINE#         176
-  C:0313H         LINE#         177
-  C:0316H         LINE#         178
-  C:031EH         LINE#         179
-  C:031EH         LINE#         180
+  C:0450H         LINE#         171
+  C:0450H         LINE#         172
+  C:0450H         LINE#         173
+  C:0457H         LINE#         174
+  C:0459H         LINE#         175
+  C:045EH         LINE#         176
+  C:045EH         LINE#         177
+  C:0461H         LINE#         178
+  C:0469H         LINE#         179
+  C:0469H         LINE#         180
   -------         ENDPROC       UART_R
   -------         PROC          _CHECKDATA
   D:0001H         SYMBOL        CHECK_DATA
   -------         DO            
   D:0007H         SYMBOL        CHECKSUM
-  D:0006H         SYMBOL        SUM
   -------         ENDDO         
-  C:02B4H         LINE#         184
-  C:02B4H         LINE#         186
-  C:02D4H         LINE#         188
-  C:02DAH         LINE#         190
-  C:02DDH         LINE#         191
-  C:02E0H         LINE#         192
-  C:02E0H         LINE#         193
-  C:02E2H         LINE#         195
+  C:042FH         LINE#         184
+  C:042FH         LINE#         186
+  C:044FH         LINE#         188
+  C:044FH         LINE#         190
   -------         ENDPROC       _CHECKDATA
   -------         PROC          _RESPONSEDATA
-  D:0021H         SYMBOL        RES_DATA
-  C:0145H         LINE#         199
-  C:014BH         LINE#         201
-  C:0151H         LINE#         203
-  C:016AH         LINE#         204
-  C:016CH         LINE#         205
-  C:017BH         LINE#         206
-  C:017DH         LINE#         207
-  C:0191H         LINE#         208
-  C:0193H         LINE#         209
-  C:01A7H         LINE#         210
-  C:01A9H         LINE#         211
-  C:01A9H         LINE#         213
-  C:01B2H         LINE#         215
-  C:01B2H         LINE#         217
+  D:0010H         SYMBOL        RES_DATA
+  C:020EH         LINE#         194
+  C:0214H         LINE#         196
+  C:0226H         LINE#         198
+  C:0238H         LINE#         199
+  C:023AH         LINE#         200
+  C:023AH         LINE#         201
+  C:0254H         LINE#         202
+  C:0256H         LINE#         203
+  C:0256H         LINE#         204
+  C:0270H         LINE#         205
+  C:0272H         LINE#         206
+  C:0272H         LINE#         207
+  C:028CH         LINE#         208
+  C:028EH         LINE#         209
+  C:0291H         LINE#         210
+  C:0291H         LINE#         212
+  C:029AH         LINE#         213
+BL51 BANKED LINKER/LOCATER V6.00                                                      02/01/2018  15:38:44  PAGE 6
+
+
+  C:029AH         LINE#         215
   -------         ENDPROC       _RESPONSEDATA
+  -------         PROC          _SENDACKDATA
+  D:0013H         SYMBOL        RES_DATA
+  -------         DO            
+  D:0016H         SYMBOL        DATA_SEND
+  -------         ENDDO         
+  C:036DH         LINE#         218
+  C:0373H         LINE#         221
+  C:0386H         LINE#         223
+  C:0394H         LINE#         224
+  C:039CH         LINE#         225
+  C:03A1H         LINE#         227
+  -------         ENDPROC       _SENDACKDATA
   -------         PROC          DELAY_1MS
   -------         DO            
   D:0007H         SYMBOL        i
   D:0006H         SYMBOL        j
   -------         ENDDO         
-  C:0360H         LINE#         221
-BL51 BANKED LINKER/LOCATER V6.00                                                      02/01/2018  15:02:12  PAGE 6
-
-
-  C:0360H         LINE#         224
-  C:0361H         LINE#         225
-  C:0362H         LINE#         226
-  C:0363H         LINE#         227
-  C:0365H         LINE#         228
-  C:0367H         LINE#         230
-  C:0367H         LINE#         231
-  C:0369H         LINE#         232
-  C:036BH         LINE#         235
+  C:04A2H         LINE#         233
+  C:04A2H         LINE#         236
+  C:04A3H         LINE#         237
+  C:04A4H         LINE#         238
+  C:04A5H         LINE#         239
+  C:04A7H         LINE#         240
+  C:04A9H         LINE#         242
+  C:04A9H         LINE#         243
+  C:04ABH         LINE#         244
+  C:04ADH         LINE#         247
   -------         ENDPROC       DELAY_1MS
-  C:02E5H         SYMBOL        L?0053
-  -------         PROC          L?0052
-  -------         ENDPROC       L?0052
-  C:02E5H         SYMBOL        L?0053
+  C:040FH         SYMBOL        L?0056
+  -------         PROC          L?0055
+  -------         ENDPROC       L?0055
+  C:040FH         SYMBOL        L?0056
   -------         PROC          _DELAY_MS
   D:0004H         SYMBOL        timeout
   -------         DO            
   D:0002H         SYMBOL        t
   -------         ENDDO         
-  C:02ECH         LINE#         237
-  C:02F0H         LINE#         238
-  C:02F0H         LINE#         239
-  C:02F3H         LINE#         240
-  C:02FAH         LINE#         241
-  C:02FAH         LINE#         242
-  C:02FFH         LINE#         243
-  C:0302H         LINE#         244
-  C:0304H         LINE#         245
+  C:0416H         LINE#         249
+  C:041AH         LINE#         250
+  C:041AH         LINE#         251
+  C:041DH         LINE#         252
+  C:0424H         LINE#         253
+  C:0424H         LINE#         254
+  C:0429H         LINE#         255
+  C:042CH         LINE#         256
+  C:042EH         LINE#         257
   -------         ENDPROC       _DELAY_MS
   -------         PROC          CONNECTSERVER
-  C:020BH         LINE#         248
-  C:020BH         LINE#         251
-  C:020FH         LINE#         252
-  C:0212H         LINE#         254
-  C:0216H         LINE#         255
-  C:0219H         LINE#         266
-  C:021FH         LINE#         267
-  C:0222H         LINE#         269
-  C:022BH         LINE#         270
-  C:0232H         LINE#         272
-  C:0238H         LINE#         273
-  C:023BH         LINE#         275
-  C:0241H         LINE#         276
-  C:0244H         LINE#         278
-  C:024AH         LINE#         279
-  C:024DH         LINE#         281
-  C:0250H         LINE#         282
+  C:0327H         LINE#         260
+  C:0327H         LINE#         263
+  C:032BH         LINE#         264
+  C:032EH         LINE#         266
+  C:0332H         LINE#         267
+  C:0335H         LINE#         278
+  C:033BH         LINE#         279
+BL51 BANKED LINKER/LOCATER V6.00                                                      02/01/2018  15:38:44  PAGE 7
+
+
+  C:033EH         LINE#         281
+  C:0347H         LINE#         282
+  C:034EH         LINE#         284
+  C:0354H         LINE#         285
+  C:0357H         LINE#         287
+  C:035DH         LINE#         288
+  C:0360H         LINE#         290
+  C:0366H         LINE#         291
+  C:0369H         LINE#         293
+  C:036CH         LINE#         294
   -------         ENDPROC       CONNECTSERVER
   -------         ENDMOD        SMARTCAR
 
+  -------         MODULE        ?C?COPY
+  C:00F6H         PUBLIC        ?C?COPY
+  -------         ENDMOD        ?C?COPY
+
   -------         MODULE        ?C?CLDPTR
-  C:01B3H         PUBLIC        ?C?CLDPTR
+  C:011CH         PUBLIC        ?C?CLDPTR
   -------         ENDMOD        ?C?CLDPTR
 
   -------         MODULE        ?C?CLDOPTR
-  C:01CCH         PUBLIC        ?C?CLDOPTR
+  C:0135H         PUBLIC        ?C?CLDOPTR
   -------         ENDMOD        ?C?CLDOPTR
-BL51 BANKED LINKER/LOCATER V6.00                                                      02/01/2018  15:02:12  PAGE 7
-
-
 
   -------         MODULE        ?C?CSTPTR
-  C:01F9H         PUBLIC        ?C?CSTPTR
+  C:0162H         PUBLIC        ?C?CSTPTR
   -------         ENDMOD        ?C?CSTPTR
 
-Program Size: data=39.1 xdata=0 code=887
+Program Size: data=42.1 xdata=0 code=1209
 LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)
