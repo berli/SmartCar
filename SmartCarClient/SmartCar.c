@@ -184,7 +184,7 @@ void UART_R()
 char CheckData(unsigned char *CHECK_DATA) {
 
     unsigned char  CHECKSUM = CHECK_DATA[1]+CHECK_DATA[2]+CHECK_DATA[3]+CHECK_DATA[4]-0x01;
-    
+
     return CHECKSUM;
 
 }
@@ -197,16 +197,16 @@ void ResponseData(unsigned char *RES_DATA) {
 
         if(RES_DATA[1]==0x03 && RES_DATA[4]==0x02) {
             LED = 1;
-						sendAckData(RES_DATA);
+            sendAckData(RES_DATA);
         } else	if(RES_DATA[1]==0x03 && RES_DATA[4]==0x01) {
             LED = 0;
-						sendAckData(RES_DATA);
+            sendAckData(RES_DATA);
         } else if(RES_DATA[1]==0x02 && RES_DATA[4]==0x02) {
             LOUND = 1;
-						sendAckData(RES_DATA);
+            sendAckData(RES_DATA);
         } else	if(RES_DATA[1]==0x02 && RES_DATA[4]==0x01) {
             LOUND = 0;
-						sendAckData(RES_DATA);
+            sendAckData(RES_DATA);
         }
 
         SendData(DATA_GET);
@@ -215,17 +215,17 @@ void ResponseData(unsigned char *RES_DATA) {
 }
 
 
-void sendAckData(unsigned char *RES_DATA){
-	
-	
-	unsigned char DATA_SEND[]= { 0x7E, 0x00,     0x02,  0x00,    0x00 ,      0x00,       0x7E};
+void sendAckData(unsigned char *RES_DATA) {
 
-	DATA_SEND[1]= RES_DATA[1];
-	DATA_SEND[4]= RES_DATA[4];
-	DATA_SEND[5]= CheckData(RES_DATA);
-	
-	SendData(DATA_SEND);
-	
+
+    unsigned char DATA_SEND[]= { 0x7E, 0x00,     0x02,  0x00,    0x00 ,      0x00,       0x7E};
+
+    DATA_SEND[1]= RES_DATA[1];
+    DATA_SEND[4]= RES_DATA[4];
+    DATA_SEND[5]= CheckData(RES_DATA);
+
+    SendData(DATA_SEND);
+
 }
 
 
