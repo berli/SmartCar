@@ -1,2 +1,0 @@
-改IP地址和MAC地址在uipopt.h
-端口配置在enc28j60.h里面

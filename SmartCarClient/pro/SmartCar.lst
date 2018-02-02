@@ -1,9 +1,10 @@
-C51 COMPILER V8.02   SMARTCAR                                                              02/01/2018 22:07:16 PAGE 1   
+C51 COMPILER V8.02   SMARTCAR                                                              02/02/2018 09:43:40 PAGE 1   
 
 
 C51 COMPILER V8.02, COMPILATION OF MODULE SMARTCAR
-OBJECT MODULE PLACED IN SmartCar.OBJ
-COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE SmartCar.c BROWSE DEBUG OBJECTEXTEND TABS(2)
+OBJECT MODULE PLACED IN ..\hex\SmartCar.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE ..\code\SmartCar.c PRINT(.\SmartCar.lst) TABS(2) OBJECT(..\hex\SmartCar.obj
+                    -)
 
 line level    source
 
@@ -61,9 +62,9 @@ line level    source
   52          void USART_Init();
   53          void Device_Init();
   54          void ResponseData(unsigned char *RES_DATA);
-  55          char CheckData(unsigned char *CHECK_DATA);
-C51 COMPILER V8.02   SMARTCAR                                                              02/01/2018 22:07:16 PAGE 2   
+C51 COMPILER V8.02   SMARTCAR                                                              02/02/2018 09:43:40 PAGE 2   
 
+  55          char CheckData(unsigned char *CHECK_DATA);
   56          void sendAckData(unsigned char *RES_DATA);
   57          void ConnectSuccess();
   58          
@@ -125,9 +126,9 @@ line level    source
  114   1      //   ACC = P_SW1;
  115   1      //    ACC &= ~(S1_S0 | S1_S1);    //S1_S0=0 S1_S1=0
  116   1      //    P_SW1 = ACC;                //(P3.0/RxD, P3.1/TxD)
- 117   1      
-C51 COMPILER V8.02   SMARTCAR                                                              02/01/2018 22:07:16 PAGE 3   
+C51 COMPILER V8.02   SMARTCAR                                                              02/02/2018 09:43:40 PAGE 3   
 
+ 117   1      
  118   1          ACC = P_SW1;
  119   1          ACC &= ~(S1_S0 | S1_S1);    //S1_S0=1 S1_S1=0
  120   1          ACC |= S1_S0;               //(P3.6/RxD_2, P3.7/TxD_2)
@@ -189,9 +190,9 @@ line level    source
  176   2           while(!TI);    //检查发送中断标志位
  177   2          TI = 0; 
  178   2          }
- 179   1      }
-C51 COMPILER V8.02   SMARTCAR                                                              02/01/2018 22:07:16 PAGE 4   
+C51 COMPILER V8.02   SMARTCAR                                                              02/02/2018 09:43:40 PAGE 4   
 
+ 179   1      }
  180          
  181          void UART_T (unsigned char UART_data) { //定义串口发送数据变量
  182   1          SBUF = UART_data; //将接收的数据发送回去
@@ -204,7 +205,7 @@ line level    source
  189   1          while(*str != '\0') {
  190   2              UART_T(*str);
  191   2              *str++;
-*** WARNING C275 IN LINE 191 OF SMARTCAR.C: expression with possibly no effect
+*** WARNING C275 IN LINE 191 OF ..\CODE\SMARTCAR.C: expression with possibly no effect
  192   2          }
  193   1          *str = 0;
  194   1      }
@@ -253,9 +254,9 @@ line level    source
  237   3                  sendAckData(RES_DATA);
  238   3              }
  239   2          }
- 240   1      
-C51 COMPILER V8.02   SMARTCAR                                                              02/01/2018 22:07:16 PAGE 5   
+C51 COMPILER V8.02   SMARTCAR                                                              02/02/2018 09:43:40 PAGE 5   
 
+ 240   1      
  241   1      }
  242          
  243          
@@ -317,9 +318,9 @@ line level    source
  299   1      
  300   1          //UART_TC("AT+CWSTOPSMART\r\n\0"); // 结束智能配网模式，释放模块资源(必须)
  301   1      //  DELAY_MS( 1000);
- 302   1          //LED = 1; // 配网指示灯熄灭
-C51 COMPILER V8.02   SMARTCAR                                                              02/01/2018 22:07:16 PAGE 6   
+C51 COMPILER V8.02   SMARTCAR                                                              02/02/2018 09:43:40 PAGE 6   
 
+ 302   1          //LED = 1; // 配网指示灯熄灭
  303   1      
  304   1          UART_TC("AT+CIPMUX=0\r\n\0");  // 设置单连接模式
  305   1          DELAY_MS(1500);
