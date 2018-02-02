@@ -40,6 +40,8 @@ BYTE DATA_GET[]=  { 0x7E, 0x00,     0,  0,      0,      0,       0x7E};
 #define S1_S1 0x80              //P_SW1.7
 
 
+void SendString(char *s);
+void SendDatas(char *s);
 
 void SendData(char *s);
 void UART_TC (unsigned char *str);
@@ -52,23 +54,36 @@ void Device_Init();
 void ResponseData(unsigned char *RES_DATA);
 char CheckData(unsigned char *CHECK_DATA);
 void sendAckData(unsigned char *RES_DATA);
-
+void ConnectSuccess();
 
 void main()
 {
+ P0M0 = 0x00;
+    P0M1 = 0x00;
+    P1M0 = 0x00;
+    P1M1 = 0x00;
+    P2M0 = 0x00;
+    P2M1 = 0x00;
+    P3M0 = 0x00;
+    P3M1 = 0x00;
+    P4M0 = 0x00;
+    P4M1 = 0x00;
+    P5M0 = 0x00;
+    P5M1 = 0x00;
+    P6M0 = 0x00;
+    P6M1 = 0x00;
+    P7M0 = 0x00;
+    P7M1 = 0x00;
 
     Device_Init();
 
     USART_Init();
 
-    DELAY_MS(1000);
+		ConnectServer();
 
-    ConnectServer();
-
+		ConnectSuccess();
+		
     while(1) {
-
-        //	DELAY_MS(2000);
-        //	SendString(DATA_GET);
 
     };
 }
@@ -78,6 +93,18 @@ void Device_Init() {
 
     LED = 0;
     LOUND = 0;
+}
+
+void ConnectSuccess(){
+
+	 LOUND = 1;
+	 DELAY_MS(200);
+		LOUND = 0;
+	 DELAY_MS(200);
+	  LOUND = 1;
+	 DELAY_MS(200);
+	  LOUND = 0;
+
 }
 
 
@@ -140,19 +167,20 @@ void  SendData(char *s)
 {
 
     unsigned int i=0;
-    while (busy);               //等待前面的数据发送完成
+
 
     for(i=0; i<DATA_LENGTH; i++)
     {
+				 
         SBUF=s[i];
-        while(!TI);
-        TI=0;
+     while(!TI);		//检查发送中断标志位
+    TI = 0;	
     }
 }
 
 void UART_T (unsigned char UART_data) { //定义串口发送数据变量
     SBUF = UART_data;	//将接收的数据发送回去
-    while(TI == 0);		//检查发送中断标志位
+    while(!TI);		//检查发送中断标志位
     TI = 0;			//令发送中断标志位为0（软件清零）
 }
 
@@ -160,7 +188,7 @@ void UART_T (unsigned char UART_data) { //定义串口发送数据变量
 void UART_TC (unsigned char *str) {
     while(*str != '\0') {
         UART_T(*str);
-        str++;
+        *str++;
     }
     *str = 0;
 }
@@ -208,8 +236,6 @@ void ResponseData(unsigned char *RES_DATA) {
             LOUND = 0;
             sendAckData(RES_DATA);
         }
-
-        SendData(DATA_GET);
     }
 
 }
@@ -261,10 +287,10 @@ void ConnectServer() {
 
 
     UART_TC("+++\0"); // 退出透传模式
-    DELAY_MS( 1500);
+    DELAY_MS( 1000);
 
-    UART_TC("AT\r\n\0");	// AT指令测试
-    DELAY_MS(1500);
+    //UART_TC("AT\r\n\0");	// AT指令测试
+    //DELAY_MS(1500);
 
     //UART_TC("AT+CWSTARTSMART\r\n\0"); // 开始智能配网模式
     //DELAY_MS(1000);
@@ -288,7 +314,7 @@ void ConnectServer() {
     DELAY_MS(1500);
 
     UART_TC("AT+CIPSEND\r\n\0");	 // 进入透传模式
-    DELAY_MS( 1500);
+    DELAY_MS( 1000);
 
     CURRENT_LENGTH=0;
 }
