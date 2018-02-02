@@ -16,4 +16,4 @@
 > iOS 手机APP通过socket连接Nodejs server，发送的数据是根据DOC文件夹里面的协议组装，目前已经实现手机控制开/关灯、开/关蜂鸣器！代码对应的文件夹是“SmartCarAPP”
 
 
-做此项目纯粹自己爱好，若有更好的解决方案或改进，欢迎一起讨论学习！ guntertien@gmail.com
+做此项目纯粹自己爱好，若有更好的解决方案或改进，欢迎一起讨论学习！ 优酷视频：http://v.youku.com/v_show/id_XMzM3MzY2OTE3Mg==.html
