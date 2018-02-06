@@ -1,0 +1,14 @@
+source 'https://github.com/CocoaPods/Specs.git'
+
+platform :ios, '9.0'
+
+target 'SmartCar’ do
+  use_frameworks!
+
+  # Pods for SmartCar
+
+pod "IQKeyboardManager", "5.0.7"
+pod "Masonry", "1.1.0"
+pod "ReactiveObjC", "2.1.2"
+
+end

@@ -7,22 +7,25 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4547F93A90EEBF7A9E4E7DB4 /* Pods_SmartCar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4CBD6C76D242428EC9F763A /* Pods_SmartCar.framework */; };
 		55D54F6B201B54BD007EC8C6 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D54F6A201B54BD007EC8C6 /* AppDelegate.m */; };
-		55D54F6E201B54BD007EC8C6 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D54F6D201B54BD007EC8C6 /* ViewController.m */; };
+		55D54F6E201B54BD007EC8C6 /* SCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D54F6D201B54BD007EC8C6 /* SCViewController.m */; };
 		55D54F71201B54BD007EC8C6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 55D54F6F201B54BD007EC8C6 /* Main.storyboard */; };
 		55D54F73201B54BD007EC8C6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 55D54F72201B54BD007EC8C6 /* Assets.xcassets */; };
 		55D54F76201B54BD007EC8C6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 55D54F74201B54BD007EC8C6 /* LaunchScreen.storyboard */; };
 		55D54F79201B54BD007EC8C6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D54F78201B54BD007EC8C6 /* main.m */; };
 		55D54F83201B559C007EC8C6 /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D54F80201B559C007EC8C6 /* GCDAsyncSocket.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		55D54F84201B559C007EC8C6 /* GCDAsyncUdpSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D54F82201B559C007EC8C6 /* GCDAsyncUdpSocket.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		55D54F8A2029BBED007EC8C6 /* SCDataViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D54F892029BBED007EC8C6 /* SCDataViewModel.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		377F98A34F625FE71C5E2426 /* Pods-SmartCar.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SmartCar.release.xcconfig"; path = "Pods/Target Support Files/Pods-SmartCar/Pods-SmartCar.release.xcconfig"; sourceTree = "<group>"; };
 		55D54F66201B54BD007EC8C6 /* SmartCar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SmartCar.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		55D54F69201B54BD007EC8C6 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		55D54F6A201B54BD007EC8C6 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		55D54F6C201B54BD007EC8C6 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		55D54F6D201B54BD007EC8C6 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		55D54F6C201B54BD007EC8C6 /* SCViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SCViewController.h; sourceTree = "<group>"; };
+		55D54F6D201B54BD007EC8C6 /* SCViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SCViewController.m; sourceTree = "<group>"; };
 		55D54F70201B54BD007EC8C6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		55D54F72201B54BD007EC8C6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		55D54F75201B54BD007EC8C6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -32,6 +35,10 @@
 		55D54F80201B559C007EC8C6 /* GCDAsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDAsyncSocket.m; sourceTree = "<group>"; };
 		55D54F81201B559C007EC8C6 /* GCDAsyncUdpSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDAsyncUdpSocket.h; sourceTree = "<group>"; };
 		55D54F82201B559C007EC8C6 /* GCDAsyncUdpSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDAsyncUdpSocket.m; sourceTree = "<group>"; };
+		55D54F882029BBEC007EC8C6 /* SCDataViewModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SCDataViewModel.h; sourceTree = "<group>"; };
+		55D54F892029BBED007EC8C6 /* SCDataViewModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SCDataViewModel.m; sourceTree = "<group>"; };
+		B4CBD6C76D242428EC9F763A /* Pods_SmartCar.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SmartCar.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F05DD44768B941EBEAB3E3DC /* Pods-SmartCar.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SmartCar.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SmartCar/Pods-SmartCar.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -39,17 +46,28 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4547F93A90EEBF7A9E4E7DB4 /* Pods_SmartCar.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		42091977E9FBEA7CD713A5CE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				B4CBD6C76D242428EC9F763A /* Pods_SmartCar.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		55D54F5D201B54BD007EC8C6 = {
 			isa = PBXGroup;
 			children = (
 				55D54F68201B54BD007EC8C6 /* SmartCar */,
 				55D54F67201B54BD007EC8C6 /* Products */,
+				836B1A1E68BF14C8995107E2 /* Pods */,
+				42091977E9FBEA7CD713A5CE /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -70,8 +88,10 @@
 				55D54F82201B559C007EC8C6 /* GCDAsyncUdpSocket.m */,
 				55D54F69201B54BD007EC8C6 /* AppDelegate.h */,
 				55D54F6A201B54BD007EC8C6 /* AppDelegate.m */,
-				55D54F6C201B54BD007EC8C6 /* ViewController.h */,
-				55D54F6D201B54BD007EC8C6 /* ViewController.m */,
+				55D54F882029BBEC007EC8C6 /* SCDataViewModel.h */,
+				55D54F892029BBED007EC8C6 /* SCDataViewModel.m */,
+				55D54F6C201B54BD007EC8C6 /* SCViewController.h */,
+				55D54F6D201B54BD007EC8C6 /* SCViewController.m */,
 				55D54F6F201B54BD007EC8C6 /* Main.storyboard */,
 				55D54F72201B54BD007EC8C6 /* Assets.xcassets */,
 				55D54F74201B54BD007EC8C6 /* LaunchScreen.storyboard */,
@@ -81,6 +101,15 @@
 			path = SmartCar;
 			sourceTree = "<group>";
 		};
+		836B1A1E68BF14C8995107E2 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				F05DD44768B941EBEAB3E3DC /* Pods-SmartCar.debug.xcconfig */,
+				377F98A34F625FE71C5E2426 /* Pods-SmartCar.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -88,9 +117,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 55D54F7C201B54BD007EC8C6 /* Build configuration list for PBXNativeTarget "SmartCar" */;
 			buildPhases = (
+				8558F2BA13F0CE35B6C872F3 /* [CP] Check Pods Manifest.lock */,
 				55D54F62201B54BD007EC8C6 /* Sources */,
 				55D54F63201B54BD007EC8C6 /* Frameworks */,
 				55D54F64201B54BD007EC8C6 /* Resources */,
+				0D0411CCD16958C355F16B73 /* [CP] Embed Pods Frameworks */,
+				4310F1BF198437B1BB8D1DBB /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -147,6 +179,64 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		0D0411CCD16958C355F16B73 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-SmartCar/Pods-SmartCar-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/IQKeyboardManager/IQKeyboardManager.framework",
+				"${BUILT_PRODUCTS_DIR}/Masonry/Masonry.framework",
+				"${BUILT_PRODUCTS_DIR}/ReactiveObjC/ReactiveObjC.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/IQKeyboardManager.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Masonry.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ReactiveObjC.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SmartCar/Pods-SmartCar-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		4310F1BF198437B1BB8D1DBB /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SmartCar/Pods-SmartCar-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		8558F2BA13F0CE35B6C872F3 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-SmartCar-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		55D54F62201B54BD007EC8C6 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -154,7 +244,8 @@
 			files = (
 				55D54F83201B559C007EC8C6 /* GCDAsyncSocket.m in Sources */,
 				55D54F84201B559C007EC8C6 /* GCDAsyncUdpSocket.m in Sources */,
-				55D54F6E201B54BD007EC8C6 /* ViewController.m in Sources */,
+				55D54F8A2029BBED007EC8C6 /* SCDataViewModel.m in Sources */,
+				55D54F6E201B54BD007EC8C6 /* SCViewController.m in Sources */,
 				55D54F79201B54BD007EC8C6 /* main.m in Sources */,
 				55D54F6B201B54BD007EC8C6 /* AppDelegate.m in Sources */,
 			);
@@ -288,12 +379,13 @@
 		};
 		55D54F7D201B54BD007EC8C6 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F05DD44768B941EBEAB3E3DC /* Pods-SmartCar.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = ACCLHZHXGY;
+				DEVELOPMENT_TEAM = Y9Y7YACU74;
 				INFOPLIST_FILE = SmartCar/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -306,12 +398,13 @@
 		};
 		55D54F7E201B54BD007EC8C6 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 377F98A34F625FE71C5E2426 /* Pods-SmartCar.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = ACCLHZHXGY;
+				DEVELOPMENT_TEAM = Y9Y7YACU74;
 				INFOPLIST_FILE = SmartCar/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
